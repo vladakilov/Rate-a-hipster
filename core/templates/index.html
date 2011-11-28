@@ -1,0 +1,12 @@
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" type="text/javascript"></script>
+<script>
+  $(document).ready(function(){
+	  $.ajax({
+	    type: "GET",
+	    url: "/get_single_doc/",
+	    success: function(success){
+	      //console.log(success);
+	    }
+  })
+})
+</script>
