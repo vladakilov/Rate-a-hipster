@@ -16,15 +16,16 @@ def index(request):
 
 def create_doc(request):
     doc_api = documents()
-    form = document_form(request.POST)
+    form = document_form(request.POST, request.FILES)
     try:
         response = {}
         if form.is_valid():
             r = {'name': form.cleaned_data["name"],
-                 'description' : form.cleaned_data["description"]}
+                 'description' : form.cleaned_data["description"],
+                 'image' : request.FILES['image']}
             response = doc_api.add(r)
     except Exception as e:
-			  response = e
+        response = e
     return HttpResponse(str(response))
 
 def rate_doc(request):
@@ -42,3 +43,8 @@ def create_doc_form(request):
 def get_single_doc(request):
     doc_api = documents()
     return HttpResponse(json.dumps(doc_api.get_rand()), mimetype="application/json")
+
+def render_asset(request, img_id):
+    m = file_asset.objects.with_id(img_id)
+    mime = m.file_type
+    return HttpResponse(m.raw_file.read(),mimetype=mime)

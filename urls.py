@@ -20,6 +20,9 @@ urlpatterns = patterns('',
     (r'^create_doc/$',
      'core.views.create_doc'),
 
+    (r'^render/(?P<img_id>\w+)/$',
+     'core.views.render_asset'),
+
 
 
     # Examples:

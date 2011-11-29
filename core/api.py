@@ -1,7 +1,8 @@
 from django.core.paginator import Paginator, InvalidPage
 from core.models import *
 from mongoengine import *
-import random
+from mongoengine.fields import GridFSProxy
+import random, os
 
 class api_base:
     object_id = None
@@ -14,9 +15,11 @@ class documents(api_base):
     def add(self, item):
         result = {}
         doc = document()
+        util = utils()
         try:
             doc.name = item['name']
             doc.description = item['description']
+            doc.image = util.upload(item['image'])
             doc.save()
             result['data'] = doc.id
         except Exception as e:
@@ -24,8 +27,8 @@ class documents(api_base):
         return result
 
     def get_rand(self):
-				#if not rand:
-			 	#    rand == rand
+        #if not rand:
+        #    rand == rand
         result = {}
         item_list = []
 
@@ -44,6 +47,7 @@ class documents(api_base):
             "id": str(object_list[rand]['id']),
             "name": object_list[rand]['name'],
             "description":object_list[rand]['description'],
+            "image" : '/render/' + str(object_list[rand]['image']['id']),
             "vote_list": vote_list,
             "score": score
         }
@@ -99,3 +103,24 @@ class voting(api_base):
         except Exception as e:
             result['error'] = str(e)
         return result
+
+class utils():
+    
+    def upload(self, f):
+        random_num = random.randint(1, 10000)
+        destination = open('/tmp/' + str(random_num), 'wb+')
+    
+        for chunk in f.chunks():
+          destination.write(chunk)
+        destination.close()
+
+        try:
+          i = file_asset(raw_file = open('/tmp/' + str(random_num), 'r'))
+          i.file_type = 'image/jpeg'
+          i.save()
+
+        except Exception as strerror:
+            raise NameError(strerror)
+
+        os.remove('/tmp/' + str(random_num))
+        return i				

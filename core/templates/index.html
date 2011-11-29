@@ -4,7 +4,7 @@
 </style>
 
 
-<div id="test"></div>
+<div id="document"></div>
 
 
 
@@ -18,7 +18,8 @@ function load_object(){
     success: function(data){
       $.each(data['data'], function(key, val) {
 	      html = '<table><tr><td>ID</td><td>Name</td><td>Description</td><td>Score</td></tr>'
-	      html += '<tr><td>' + val['id'] + '</td><td>' + val['name'] + '</td><td>' + val['description'] + '</td><td>' + val['score'] + '</td></tr></table>'
+	      html += '<tr><td>' + val['id'] + '</td><td>' + val['name'] + '</td><td>' + val['description'] + '</td><td>' + val['score'] + '</td></tr>'
+	      html += '<tr><img src="'+ val['image'] +'"></tr></table>'
 	      html += '<ul id=' + val['id'] +'>\
 	                 <li class="link vote">1</li>\
 	                 <li class="link vote">2</li>\
@@ -31,7 +32,7 @@ function load_object(){
 	                 <li class="link vote">9</li>\
 	                 <li class="link vote">10</li>\
 	               </ul>'
-        $('#test').html(html);
+        $('#document').html(html);
       });
     }
   })
@@ -44,7 +45,7 @@ $('.vote').live('click', function() {
             'rating':$(this).html()},
     dataType: "json",
     success: function(data){
-	    $('#test').html(' ')
+	    $('#document').html(' ')
 	    load_object()
 }
 })
