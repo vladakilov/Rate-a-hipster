@@ -8,7 +8,7 @@ class vote(Document):
 	  rating = IntField(required=True)
 	
 class document(Document):
-    name = StringField(required=False)
+    name = StringField(required=True)
     description  = StringField(required=False)
-    votes = ListField(ReferenceField(vote))
+    vote_list = ListField(GenericReferenceField(vote))
     #image = ReferenceField(file_asset)

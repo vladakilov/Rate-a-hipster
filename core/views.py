@@ -17,17 +17,20 @@ def index(request):
 def create_doc(request):
     doc_api = documents()
     form = document_form(request.POST)
-    if form.is_valid():
-        r = {'name': form.cleaned_data["name"],
-             'description' : form.cleaned_data["description"]}
-        response = doc_api.add(r)
-    #return HttpResponse(str(doc_api.index(2)))
+    try:
+        response = {}
+        if form.is_valid():
+            r = {'name': form.cleaned_data["name"],
+                 'description' : form.cleaned_data["description"]}
+            response = doc_api.add(r)
+    except Exception as e:
+			  response = e
     return HttpResponse(str(response))
 
 def rate_doc(request):
-    doc_api = votes()
-    r = {'rating': request.GET["rating"]}
-    response = doc_api.create('4ecab5aac79eb90766000003', r)
+    vote_api = voting()
+    r = {'rating': request.POST["rating"]}
+    response = vote_api.create(request.POST["id"], r)
     return HttpResponse(str(response))
 
 def create_doc_form(request):

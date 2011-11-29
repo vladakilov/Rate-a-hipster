@@ -1,6 +1,7 @@
 from django.core.paginator import Paginator, InvalidPage
 from core.models import *
 from mongoengine import *
+import random
 
 class api_base:
     object_id = None
@@ -21,50 +22,32 @@ class documents(api_base):
         except Exception as e:
             result['error'] = str(e)
         return result
-    """
-    def handle_uploaded_file(self, f, p):
-        random_num = random.randint(1, 10000)
-
-        destination = open('/tmp/' + str(random_num), 'wb+')
-        for chunk in f.chunks():
-            destination.write(chunk)
-        destination.close()
-
-        try:
-            i = file_asset(raw_file = open('/tmp/' + str(random_num), 'r'))
-            i.file_type = 'image/jpeg'
-            i.save()
-        
-        except Exception as strerror:
-            raise NameError(strerror)
-
-        os.remove('/tmp/' + str(random_num))
-        return i
-    """
 
     def get_rand(self):
+				#if not rand:
+			 	#    rand == rand
         result = {}
         item_list = []
 
         object_list = document.objects.all()
+        object_length = len(object_list)
+        rand = random.randint(0, object_length - 1)
+  
+        score = 0
+        vote_list = []
 
-        for item in object_list:
-	
-            score = 0
-            vote_list = []
-
-            if 'votes' in item and len(item.votes) > 1:
-                for vote in item.votes:
-                    vote_list.append(vote['rating'])
-                score = sum(vote_list)/len(vote_list)
-            dataset = {
-                "id": str(item.id),
-                "name": item.name,
-                "description":item.description,
-                "votes": vote_list,
-                "score": score
-            }
-            item_list.append(dataset)
+        if len(object_list[rand]['vote_list']) > 1:
+            for vote in object_list[rand]['vote_list']:
+                vote_list.append(vote['rating'])
+            score = sum(vote_list)/len(vote_list)
+        dataset = {
+            "id": str(object_list[rand]['id']),
+            "name": object_list[rand]['name'],
+            "description":object_list[rand]['description'],
+            "vote_list": vote_list,
+            "score": score
+        }
+        item_list.append(dataset)
         result['data'] = item_list
         return result
 
@@ -88,33 +71,31 @@ class documents(api_base):
         
         score = 0
         for item in object_list:
-            if 'votes' in item and len(item.votes) > 1:
-                for vote in item.votes:
+            if 'vote_list' in item and len(item.vote_list) > 1:
+                for vote in item.vote_list:
                     vote_list.append(vote['rating'])
                 score = sum(vote_list)/len(vote_list)
             dataset = {
                 "id": str(item.id),
                 "name": item.name,
                 "description":item.description,
-                "votes": vote_list,
+                "vote_list": vote_list,
                 "score": score
             }
             item_list.append(dataset)
         result['data'] = item_list
         return result
 
-class votes(api_base):
+class voting(api_base):
     
     def create(self, obj_id, r):
         result = {}
-        d = document.objects.with_id(str(obj_id))
-        v = vote()
+        d = document.objects.with_id(obj_id)
         try:
-            v.rating = r['rating']
+            v = vote(rating = int(r['rating']))
             v.save()
-            d.votes.append(v)
+            d.vote_list.append(v)
             d.save()
-            #result['data'] = d
         except Exception as e:
             result['error'] = str(e)
         return result

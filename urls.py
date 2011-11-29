@@ -8,11 +8,14 @@ urlpatterns = patterns('',
 		(r'^$',
 		 'core.views.index'),
 		
-		(r'^get_single_doc/$',
+		(r'^doc/$',
 		 'core.views.get_single_doc'),
 		
     (r'^create/$',
      'core.views.create_doc_form'),
+
+    (r'^vote/$',
+     'core.views.rate_doc'),
 
     (r'^create_doc/$',
      'core.views.create_doc'),
