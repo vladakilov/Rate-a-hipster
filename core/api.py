@@ -27,6 +27,11 @@ class documents(api_base):
         return result
 
     def get_doc(self, obj_id=None):
+        result = {}
+        vote_list = []
+        item_list = []
+        score = 0
+  
         if not obj_id is None:
             obj_id == obj_id
             object_list = document.objects(id=obj_id)
@@ -34,12 +39,6 @@ class documents(api_base):
         else:
             object_list = document.objects.all()
             i = random.randint(0, len(object_list) - 1)
-            
-        result = {}
-        item_list = []
-  
-        score = 0
-        vote_list = []
 
         if len(object_list[i]['vote_list']) > 1:
             for vote in object_list[i]['vote_list']:
@@ -98,10 +97,13 @@ class voting(api_base):
         result = {}
         d = document.objects.with_id(obj_id)
         try:
-            v = vote(rating = int(r['rating']))
-            v.save()
-            d.vote_list.append(v)
-            d.save()
+            if 0 < int(r['rating']) <= 10:
+                v = vote(rating = int(r['rating']))
+                v.save()
+                d.vote_list.append(v)
+                d.save()
+            else:
+                raise NameError('Votes must be in between the range 1 - 10.')
         except Exception as e:
             result['error'] = str(e)
         return result

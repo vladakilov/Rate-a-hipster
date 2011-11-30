@@ -32,7 +32,7 @@ def rate_doc(request):
     vote_api = voting()
     r = {'rating': request.POST["rating"]}
     response = vote_api.create(request.POST["id"], r)
-    return HttpResponse(str(response))
+    return HttpResponse(json.dumps(response), mimetype="application/json")
 
 def create_doc_form(request):
     form = document_form()

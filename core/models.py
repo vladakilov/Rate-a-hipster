@@ -5,8 +5,8 @@ class file_asset(Document):
     file_type = StringField()
 
 class vote(Document):
-	  rating = IntField(required=True)
-	
+    rating = IntField(required=True)
+  
 class document(Document):
     name = StringField(required=True)
     description  = StringField(required=False)
