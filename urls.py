@@ -8,8 +8,11 @@ urlpatterns = patterns('',
 		(r'^$',
 		 'core.views.index'),
 		
-		(r'^doc/$',
-		 'core.views.get_single_doc'),
+		(r'^doc/(?P<obj_id>\w+)/$',
+		 'core.views.get_doc'),
+		
+		(r'^random/$',
+		 'core.views.get_rand_doc'),
 		
     (r'^create/$',
      'core.views.create_doc_form'),

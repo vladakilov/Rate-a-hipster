@@ -26,28 +26,30 @@ class documents(api_base):
             result['error'] = str(e)
         return result
 
-    def get_rand(self):
-        #if not rand:
-        #    rand == rand
+    def get_doc(self, obj_id=None):
+        if not obj_id is None:
+            obj_id == obj_id
+            object_list = document.objects(id=obj_id)
+            i = 0
+        else:
+            object_list = document.objects.all()
+            i = random.randint(0, len(object_list) - 1)
+            
         result = {}
         item_list = []
-
-        object_list = document.objects.all()
-        object_length = len(object_list)
-        rand = random.randint(0, object_length - 1)
   
         score = 0
         vote_list = []
 
-        if len(object_list[rand]['vote_list']) > 1:
-            for vote in object_list[rand]['vote_list']:
+        if len(object_list[i]['vote_list']) > 1:
+            for vote in object_list[i]['vote_list']:
                 vote_list.append(vote['rating'])
             score = sum(vote_list)/len(vote_list)
         dataset = {
-            "id": str(object_list[rand]['id']),
-            "name": object_list[rand]['name'],
-            "description":object_list[rand]['description'],
-            "image" : '/render/' + str(object_list[rand]['image']['id']),
+            "id": str(object_list[i]['id']),
+            "name": object_list[i]['name'],
+            "description":object_list[i]['description'],
+            "image" : '/render/' + str(object_list[i]['image']['id']),
             "vote_list": vote_list,
             "score": score
         }
@@ -123,4 +125,4 @@ class utils():
             raise NameError(strerror)
 
         os.remove('/tmp/' + str(random_num))
-        return i				
+        return i        

@@ -40,9 +40,13 @@ def create_doc_form(request):
     c = Context({'form':form})
     return HttpResponse(t.render(c))
 
-def get_single_doc(request):
+def get_rand_doc(request):
     doc_api = documents()
-    return HttpResponse(json.dumps(doc_api.get_rand()), mimetype="application/json")
+    return HttpResponse(json.dumps(doc_api.get_doc()), mimetype="application/json")
+
+def get_doc(request, obj_id):
+    doc_api = documents()
+    return HttpResponse(json.dumps(doc_api.get_doc(obj_id)), mimetype="application/json")
 
 def render_asset(request, img_id):
     m = file_asset.objects.with_id(img_id)
