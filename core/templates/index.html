@@ -7,14 +7,16 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" type="text/javascript"></script>
 <style>
 .link{cursor:pointer;}
+img{overflow:hidden; max-height:500px; max-width:500px;}
 </style>
 
 
-<div id="document"></div>
+<div id="document" style="overflow:hidden;width:500px"></div>
 
 
 
 <script>
+}
 function error_check(data){
   var result
   if ('error' in data){
@@ -36,7 +38,7 @@ function load_object(){
         $.each(data['data'], function(key, val) {
           html = '<table><tr><td>ID</td><td>Name</td><td>Description</td><td>Score</td></tr>'
           html += '<tr><td>' + val['id'] + '</td><td>' + val['name'] + '</td><td>' + val['description'] + '</td><td>' + val['score'] + '</td></tr>'
-          html += '<tr><img src="'+ val['image'] +'"></tr></table>'
+          html += '<tr><img src="'+ val['image'] +'" onload="resize();"></tr></table>'
           html += '<ul id=' + val['id'] +'>\
                      <li class="link vote">1</li>\
                      <li class="link vote">2</li>\

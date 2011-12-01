@@ -1,7 +1,7 @@
 Hipster = {
-  
+
   init: function () {
-    Hipster.load_object()
+    Hipster.load_object();
 
     $('.vote').live('click', function () {
       $.ajax({
@@ -14,14 +14,14 @@ Hipster = {
         dataType: "json",
         success: function (data) {
           if (error_check(data) == true) {
-            load_object()
+            load_object();
           } else {
-            alert(data['error'])
+            alert(data['error']);
           }
         }
       })
     })
-  }
+  },
 
   load_object: function () {
     $.ajax({
@@ -45,28 +45,53 @@ Hipster = {
                        <li class="link vote">8</li>\
                        <li class="link vote">9</li>\
                        <li class="link vote">10</li>\
-                     </ul>'
-            $('#document').html(html)
+                     </ul>';
+            $('#document').html(html);
           })
         } else {
-          alert(data['error'])
+          alert(data['error']);
         }
+      }
+    })
+  },
+
+  error_check: function (data) {
+    var result;
+    if ('error' in data) {
+      result = 'error';
+    } else {
+      result = true;
+    }
+    return result;
+  },
+
+  resize: function (id) {
+    $(id).each(function () {
+      var maxWidth = 500;
+      var maxHeight = 500;
+      var ratio = 0;
+      var width = $(this).width();
+      var height = $(this).height();
+
+      if (width > maxWidth) {
+        ratio = maxWidth / width;
+        $(this).css("width", maxWidth);
+        $(this).css("height", height * ratio);
+        height = height * ratio;
+        width = width * ratio;
+      }
+
+      if (height > maxHeight) {
+        ratio = maxHeight / height;
+        $(this).css("height", maxHeight);
+        $(this).css("width", width * ratio);
+        width = width * ratio;
       }
     })
   }
 
-  error_check: function (data) {
-    var result
-    if ('error' in data) {
-      result = 'error'
-    } else {
-      result = true
-    }
-    return result
-  }
-
 }
 
-$(document).ready(function() {
+$(document).ready(function () {
   Hipster.init()
-})
+});
