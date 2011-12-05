@@ -42,11 +42,16 @@ def create_doc_form(request):
 
 def get_rand_doc(request):
     doc_api = documents()
-    return HttpResponse(json.dumps(doc_api.get_doc()), mimetype="application/json")
+    return HttpResponse(json.dumps(doc_api.get_doc(), sort_keys=True, indent=2), mimetype="application/json")
 
 def get_doc(request, obj_id):
     doc_api = documents()
-    return HttpResponse(json.dumps(doc_api.get_doc(obj_id)), mimetype="application/json")
+    return HttpResponse(json.dumps(doc_api.get_doc(obj_id), sort_keys=True, indent=2), mimetype="application/json")
+
+def list_docs(request):
+    page = int(request.GET["page"])
+    doc_api = documents()
+    return HttpResponse(json.dumps(doc_api.index(page), sort_keys=True, indent=2), mimetype="application/json")
 
 def render_asset(request, img_id):
     m = file_asset.objects.with_id(img_id)

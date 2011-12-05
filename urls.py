@@ -5,15 +5,23 @@ from django.conf import settings
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-		(r'^$',
-		 'core.views.index'),
-		
-		(r'^doc/(?P<obj_id>\w+)/$',
-		 'core.views.get_doc'),
-		
-		(r'^random/$',
-		 'core.views.get_rand_doc'),
-		
+
+    #static content
+    (r'^static/(?P<path>.*)$', 'django.views.static.serve',
+    {'document_root': settings.STATIC_DOC_ROOT}),
+
+    (r'^$',
+    'core.views.index'),
+
+    (r'^doc/$',
+    'core.views.list_docs'),
+        
+    (r'^doc/(?P<obj_id>\w+)/$',
+    'core.views.get_doc'),
+        
+    (r'^random/$',
+    'core.views.get_rand_doc'),
+        
     (r'^create/$',
      'core.views.create_doc_form'),
 
@@ -25,8 +33,6 @@ urlpatterns = patterns('',
 
     (r'^render/(?P<img_id>\w+)/$',
      'core.views.render_asset'),
-
-
 
     # Examples:
     # url(r'^$', 'api_test.views.home', name='home'),

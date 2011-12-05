@@ -2,7 +2,8 @@ Hipster = {
 
   init: function () {
     Hipster.load_object();
-
+	Hipster.resize();
+	
     $('.vote').live('click', function () {
       $.ajax({
         type: "POST",
@@ -13,8 +14,8 @@ Hipster = {
         },
         dataType: "json",
         success: function (data) {
-          if (error_check(data) == true) {
-            load_object();
+          if (Hipster.error_check(data) == true) {
+            Hipster.load_object();
           } else {
             alert(data['error']);
           }
@@ -29,12 +30,12 @@ Hipster = {
       url: "/random/",
       dataType: "json",
       success: function (data) {
-        if (Music.error_check(data) == true) {
+        if (Hipster.error_check(data) == true) {
           $.each(data['data'], function (key, val) {
             html = '<table><tr><td>ID</td><td>Name</td><td>Description</td><td>Score</td></tr>'
             html += '<tr><td>' + val['id'] + '</td><td>' + val['name'] + '</td><td>' + val['description'] + '</td><td>' + val['score'] + '</td></tr>'
-            html += '<tr><img src="' + val['image'] + '"></tr></table>'
-            html += '<ul id=' + val['id'] + '>\
+            html += '<tr><img src="'+val['image']+'" onload="Hipster.resize(&quotresize_500\&quot)"></tr></table>'
+            html += '<ul id=' + val['id'] + ' class="rate">\
                        <li class="link vote">1</li>\
                        <li class="link vote">2</li>\
                        <li class="link vote">3</li>\
@@ -55,6 +56,38 @@ Hipster = {
     })
   },
 
+  load_page: function (page) {
+    Hipster.clear_div();
+    var html = '';
+    $.ajax({
+      type: "GET",
+      data: {
+        'page': page
+      },
+      url: "/doc/",
+      dataType: "json",
+      success: function (data) {
+        if (Hipster.error_check(data) == true) {
+          html += '<ul>';
+          $.each(data['data'], function (key, val) {
+            if (key % 2 == 0) {
+              html += '<li class="even"><a href="/doc/' + data['data'][key]['id'] + '"><img src="' + data['data'][key]['image'] + '"></a></li>';
+            } else {
+              html += '<li class="odd"><a href="/doc/' + data['data'][key]['id'] + '"><img src="' + data['data'][key]['image'] + '"></a></li>';
+            }
+          });
+          if (data['paging']) {
+            html += '<p onclick="Hipster.load_page(' + data["paging"]["page"] + ')">Next Page</p>'
+          }
+          $('#doc_list').html(html);
+
+        } else {
+          alert(data['error']);
+        }
+      }
+    })
+  },
+
   error_check: function (data) {
     var result;
     if ('error' in data) {
@@ -65,10 +98,14 @@ Hipster = {
     return result;
   },
 
-  resize: function (id) {
-    $(id).each(function () {
-      var maxWidth = 500;
-      var maxHeight = 500;
+  clear_div: function () {
+    $('#document').html('')
+  },
+
+  resize: function () {
+    $('.resize_500').each(function () {
+      var maxWidth = 150;
+      var maxHeight = 150;
       var ratio = 0;
       var width = $(this).width();
       var height = $(this).height();

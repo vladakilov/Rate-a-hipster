@@ -1,85 +1,21 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Hipster Doofus</title>
+  <title>Hipster Doofus</title>
+  <link rel="stylesheet" href="/static/css/reset.css" type="text/css" media="screen">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" type="text/javascript"></script>
+  <script src="/static/js/hipster.js" type="text/javascript"></script>
+  <style>
+    .link{cursor:pointer;}
+    .rate li{display: inline;}
+    #container{width:500px; margin:0 auto; border:2px solid #333; overflow:hidden;}
+  </style>
 </head>
 <body>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js" type="text/javascript"></script>
-<style>
-.link{cursor:pointer;}
-img{overflow:hidden; max-height:500px; max-width:500px;}
-</style>
-
-
-<div id="document" style="overflow:hidden;width:500px"></div>
-
-
-
-<script>
-}
-function error_check(data){
-  var result
-  if ('error' in data){
-    result = 'error'
-  }
-  else{
-    result = true
-  }
-  return result
-}
-
-function load_object(){
-  $.ajax({
-    type: "GET",
-    url: "/random/",
-    dataType: "json",
-    success: function(data){
-      if (error_check(data) == true){
-        $.each(data['data'], function(key, val) {
-          html = '<table><tr><td>ID</td><td>Name</td><td>Description</td><td>Score</td></tr>'
-          html += '<tr><td>' + val['id'] + '</td><td>' + val['name'] + '</td><td>' + val['description'] + '</td><td>' + val['score'] + '</td></tr>'
-          html += '<tr><img src="'+ val['image'] +'" onload="resize();"></tr></table>'
-          html += '<ul id=' + val['id'] +'>\
-                     <li class="link vote">1</li>\
-                     <li class="link vote">2</li>\
-                     <li class="link vote">3</li>\
-                     <li class="link vote">4</li>\
-                     <li class="link vote">5</li>\
-                     <li class="link vote">6</li>\
-                     <li class="link vote">7</li>\
-                     <li class="link vote">8</li>\
-                     <li class="link vote">9</li>\
-                     <li class="link vote">10</li>\
-                   </ul>'
-          $('#document').html(html)
-        })
-      }
-      else{alert(data['error'])}
-    }
-  })
-}
-
-
-$('.vote').live('click', function() {
-  $.ajax({
-    type: "POST",
-    url: "/vote/",
-    data : {'id':$(this).parent().attr("id"),
-            'rating':$(this).html()},
-    dataType: "json",
-    success: function(data){
-      if (error_check(data) == true){
-        load_object()
-      }
-      else{alert(data['error'])}
-    }
-  })
-})
-
-$(document).ready(function(){
-  load_object()
-})
-</script>
-
+  <div id="container">
+    <p onclick="Hipster.load_page(1)">view all</p>
+    <div id="doc_list"></div>
+    <div id="document" style="overflow:hidden;width:500px"></div>
+  </div>
 </body>
 </html>

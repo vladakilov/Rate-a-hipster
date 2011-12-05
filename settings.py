@@ -1,6 +1,8 @@
 # Django settings for api_test project.
 from mongoengine import *
 from core.models import *
+import os
+
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -65,6 +67,13 @@ STATIC_ROOT = ''
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
+
+# Additional locations of static files
+STATICFILES_DIRS = (
+    "/core/static/"
+)
+
+STATIC_DOC_ROOT = os.path.dirname(os.path.realpath(__file__))+"/core/static/"
 
 # URL prefix for admin static files -- CSS, JavaScript and images.
 # Make sure to use a trailing slash.

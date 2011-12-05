@@ -69,10 +69,11 @@ class documents(api_base):
             page_obj = paginator.page(page)
         except InvalidPage:
             return result
-
-        result['paging'] = {
-            'has_next_page' : page_obj.has_next()
-        }
+        if page_obj.has_next():
+	        result['paging'] = {
+				'page' : page_obj.next_page_number(),
+	            'next_page' : '/doc/?page=%s' % (page_obj.next_page_number())
+	        }
         
         score = 0
         for item in object_list:
@@ -84,7 +85,9 @@ class documents(api_base):
                 "id": str(item.id),
                 "name": item.name,
                 "description":item.description,
-                "vote_list": vote_list,
+	            "image" : '/render/' + str(item.image.id),
+
+                #"vote_list": vote_list,
                 "score": score
             }
             item_list.append(dataset)
