@@ -13,20 +13,23 @@ urlpatterns = patterns('',
     (r'^$',
     'core.views.index'),
 
-    (r'^doc/$',
+    (r'^api/doc/$',
     'core.views.list_docs'),
         
-    (r'^doc/(?P<obj_id>\w+)/$',
+    (r'^api/doc/(?P<obj_id>\w+)/$',
     'core.views.get_doc'),
         
-    (r'^random/$',
+    (r'^api/random/$',
     'core.views.get_rand_doc'),
+
+    (r'^api/vote/$',
+     'core.views.rate_doc'),
+
+    (r'^doc/(?P<obj_id>\w+)/$',
+    'core.views.render_doc'),
         
     (r'^create/$',
      'core.views.create_doc_form'),
-
-    (r'^vote/$',
-     'core.views.rate_doc'),
 
     (r'^create_doc/$',
      'core.views.create_doc'),

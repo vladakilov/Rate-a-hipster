@@ -2,7 +2,7 @@ from django.core.paginator import Paginator, InvalidPage
 from core.models import *
 from mongoengine import *
 from mongoengine.fields import GridFSProxy
-import random, os
+import random, os, json
 
 class api_base:
     object_id = None
@@ -54,7 +54,7 @@ class documents(api_base):
         }
         item_list.append(dataset)
         result['data'] = item_list
-        return result
+        return json.dumps(result)
 
 
     def index(self, page=1):
@@ -70,10 +70,10 @@ class documents(api_base):
         except InvalidPage:
             return result
         if page_obj.has_next():
-	        result['paging'] = {
-				'page' : page_obj.next_page_number(),
-	            'next_page' : '/doc/?page=%s' % (page_obj.next_page_number())
-	        }
+            result['paging'] = {
+                'page' : page_obj.next_page_number(),
+                'next_page' : '/doc/?page=%s' % (page_obj.next_page_number())
+            }
         
         score = 0
         for item in object_list:
@@ -85,7 +85,7 @@ class documents(api_base):
                 "id": str(item.id),
                 "name": item.name,
                 "description":item.description,
-	            "image" : '/render/' + str(item.image.id),
+                "image" : '/render/' + str(item.image.id),
 
                 #"vote_list": vote_list,
                 "score": score

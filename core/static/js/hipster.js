@@ -2,12 +2,11 @@ Hipster = {
 
   init: function () {
     Hipster.load_object();
-	Hipster.resize();
-	
+    
     $('.vote').live('click', function () {
       $.ajax({
         type: "POST",
-        url: "/vote/",
+        url: "/api/vote/",
         data: {
           'id': $(this).parent().attr("id"),
           'rating': $(this).html()
@@ -27,14 +26,14 @@ Hipster = {
   load_object: function () {
     $.ajax({
       type: "GET",
-      url: "/random/",
+      url: "/api/random/",
       dataType: "json",
       success: function (data) {
         if (Hipster.error_check(data) == true) {
           $.each(data['data'], function (key, val) {
             html = '<table><tr><td>ID</td><td>Name</td><td>Description</td><td>Score</td></tr>'
             html += '<tr><td>' + val['id'] + '</td><td>' + val['name'] + '</td><td>' + val['description'] + '</td><td>' + val['score'] + '</td></tr>'
-            html += '<tr><img src="'+val['image']+'" onload="Hipster.resize(&quotresize_500\&quot)"></tr></table>'
+            html += '<tr><img src="'+val['image']+'" onload="Hipster.resize(&quot;resize_500&quot;)" class="resize_500"></tr></table>'
             html += '<ul id=' + val['id'] + ' class="rate">\
                        <li class="link vote">1</li>\
                        <li class="link vote">2</li>\
@@ -64,20 +63,20 @@ Hipster = {
       data: {
         'page': page
       },
-      url: "/doc/",
+      url: "/api/doc/",
       dataType: "json",
       success: function (data) {
         if (Hipster.error_check(data) == true) {
           html += '<ul>';
           $.each(data['data'], function (key, val) {
             if (key % 2 == 0) {
-              html += '<li class="even"><a href="/doc/' + data['data'][key]['id'] + '"><img src="' + data['data'][key]['image'] + '"></a></li>';
+              html += '<li class="even"><a href="/doc/' + data['data'][key]['id'] + '"><img src="' + data['data'][key]['image'] + '" onload="Hipster.resize(&quot;resize_200&quot;)" class="resize_200"></a></li>';
             } else {
-              html += '<li class="odd"><a href="/doc/' + data['data'][key]['id'] + '"><img src="' + data['data'][key]['image'] + '"></a></li>';
+              html += '<li class="odd"><a href="/doc/' + data['data'][key]['id'] + '"><img src="' + data['data'][key]['image'] + '" onload="Hipster.resize(&quot;resize_200&quot;)" class="resize_200"></a></li>';
             }
           });
           if (data['paging']) {
-            html += '<p onclick="Hipster.load_page(' + data["paging"]["page"] + ')">Next Page</p>'
+            html += '</ul><div onclick="Hipster.load_page(' + data["paging"]["page"] + ')">Next Page</div>'
           }
           $('#doc_list').html(html);
 
@@ -102,10 +101,11 @@ Hipster = {
     $('#document').html('')
   },
 
-  resize: function () {
-    $('.resize_500').each(function () {
-      var maxWidth = 150;
-      var maxHeight = 150;
+  resize: function (type) {
+    var size = type.slice(-3)
+    $('.'+type).each(function () {
+      var maxWidth = size;
+      var maxHeight = size;
       var ratio = 0;
       var width = $(this).width();
       var height = $(this).height();
@@ -128,7 +128,3 @@ Hipster = {
   }
 
 }
-
-$(document).ready(function () {
-  Hipster.init()
-});

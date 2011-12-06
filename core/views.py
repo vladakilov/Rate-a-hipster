@@ -28,30 +28,40 @@ def create_doc(request):
         response = e
     return HttpResponse(str(response))
 
-def rate_doc(request):
-    vote_api = voting()
-    r = {'rating': request.POST["rating"]}
-    response = vote_api.create(request.POST["id"], r)
-    return HttpResponse(json.dumps(response), mimetype="application/json")
-
 def create_doc_form(request):
     form = document_form()
     t = loader.get_template("create_form.html")
     c = Context({'form':form})
     return HttpResponse(t.render(c))
 
+#api call to vote on a single doc response->json object
+def rate_doc(request):
+    vote_api = voting()
+    r = {'rating': request.POST["rating"]}
+    response = vote_api.create(request.POST["id"], r)
+    return HttpResponse(json.dumps(response), mimetype="application/json")
+
+#api call to show a random single doc response->json object
 def get_rand_doc(request):
     doc_api = documents()
-    return HttpResponse(json.dumps(doc_api.get_doc(), sort_keys=True, indent=2), mimetype="application/json")
+    return HttpResponse(doc_api.get_doc(), mimetype="application/json")
 
+#api call to show single doc response->json object
 def get_doc(request, obj_id):
     doc_api = documents()
     return HttpResponse(json.dumps(doc_api.get_doc(obj_id), sort_keys=True, indent=2), mimetype="application/json")
 
+#api call to show all docs response->json object
 def list_docs(request):
     page = int(request.GET["page"])
     doc_api = documents()
     return HttpResponse(json.dumps(doc_api.index(page), sort_keys=True, indent=2), mimetype="application/json")
+
+def render_doc(request, obj_id):
+    doc_api = documents()
+    t = loader.get_template("single_doc.html")
+    c = Context({'doc': json.loads(doc_api.get_doc(obj_id))})
+    return HttpResponse(t.render(c))
 
 def render_asset(request, img_id):
     m = file_asset.objects.with_id(img_id)

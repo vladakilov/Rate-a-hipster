@@ -13,18 +13,19 @@
     #doc_list li{width:150px; height: 150px; float:left; overflow:hidden; margin:0px 0px 10px 10px;}
     li.even{overflow:hidden; border:solid 3px #555;}
     li.odd{overflow:hidden; border:solid 3px #3e3;}
+
   </style>
 </head>
 <body>
   <div id="container">
-    <a href="#top" onclick="Hipster.load_page(1)">view all</a>
+    <p onclick="Hipster.load_page(1)">view all</p>
     <div id="doc_list"></div>
-    <div id="document" style="overflow:hidden;width:500px"></div>
+    <div id="document" style="overflow:hidden;width:500px">
+    	{% for item in doc.data %}
+	      <img src="{{item.image}}">
+	    {% endfor %}
+    </div>
+
   </div>
-  <script>
-	$(document).ready(function () {
-	  Hipster.init()
-	});
-	</script>
 </body>
 </html>
