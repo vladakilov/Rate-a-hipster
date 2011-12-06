@@ -71,10 +71,20 @@ class documents(api_base):
             return result
         if page_obj.has_next():
             result['paging'] = {
-                'page' : page_obj.next_page_number(),
-                'next_page' : '/doc/?page=%s' % (page_obj.next_page_number())
-            }
-        
+                'page_list' : paginator.page_range,
+                'next_page' : page_obj.next_page_number()
+        }
+        if page_obj.has_previous():
+            result['paging'] = {
+                'page_list' : paginator.page_range,
+                'previous_page' : page_obj.previous_page_number(),
+        }
+        if page_obj.has_next() and page_obj.has_previous():
+            result['paging'] = {
+                'page_list' : paginator.page_range,
+                'previous_page' : page_obj.previous_page_number(),
+                'next_page' : page_obj.next_page_number()
+        }
         score = 0
         for item in object_list:
             if 'vote_list' in item and len(item.vote_list) > 1:

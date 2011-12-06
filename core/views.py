@@ -49,7 +49,7 @@ def get_rand_doc(request):
 #api call to show single doc response->json object
 def get_doc(request, obj_id):
     doc_api = documents()
-    return HttpResponse(json.dumps(doc_api.get_doc(obj_id), sort_keys=True, indent=2), mimetype="application/json")
+    return HttpResponse(doc_api.get_doc(obj_id), mimetype="application/json")
 
 #api call to show all docs response->json object
 def list_docs(request):

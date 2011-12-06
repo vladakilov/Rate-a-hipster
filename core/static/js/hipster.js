@@ -67,7 +67,8 @@ Hipster = {
       dataType: "json",
       success: function (data) {
         if (Hipster.error_check(data) == true) {
-          html += '<ul>';
+	      // Display all image
+          html += '<ul id="doc_items">';
           $.each(data['data'], function (key, val) {
             if (key % 2 == 0) {
               html += '<li class="even"><a href="/doc/' + data['data'][key]['id'] + '"><img src="' + data['data'][key]['image'] + '" onload="Hipster.resize(&quot;resize_200&quot;)" class="resize_200"></a></li>';
@@ -75,9 +76,20 @@ Hipster = {
               html += '<li class="odd"><a href="/doc/' + data['data'][key]['id'] + '"><img src="' + data['data'][key]['image'] + '" onload="Hipster.resize(&quot;resize_200&quot;)" class="resize_200"></a></li>';
             }
           });
+          html += '</ul><div id="pagination"><ul>';
+          // Pagination
           if (data['paging']) {
-            html += '</ul><div onclick="Hipster.load_page(' + data["paging"]["page"] + ')">Next Page</div>'
+	        if (data['paging']['previous_page']) {
+              html += '<li class="paginate" onclick="Hipster.load_page(' + data["paging"]["previous_page"] + ')">Previous Page</li>';
+            }
+            $.each(data['paging']['page_list'], function (key, val) {
+              html += '<li class="paginate" onclick="Hipster.load_page(' + val + ')">'+val+'</li>';
+	        })
+	        if (data['paging']['next_page']) {
+              html += '<li class="paginate" onclick="Hipster.load_page(' + data["paging"]["next_page"] + ')">Next Page</li>';
+            }
           }
+          html += '</ul></div>'
           $('#doc_list').html(html);
 
         } else {
